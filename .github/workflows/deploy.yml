@@ -38,7 +38,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-    # your other configurations here
+          name: github-pages  # This line was added.
           path: './build'
 
   deploy:
