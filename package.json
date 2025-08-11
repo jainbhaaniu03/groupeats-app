@@ -1,7 +1,7 @@
 {
   "name": "groupeats-app",
   "version": "1.0.0",
-  "homepage": "https://YOUR_USERNAME.github.io/groupeats-app",
+  "homepage": "https://jainbhaaniu03.github.io/groupeats-app",
   "private": true,
   "dependencies": {
     "react": "^18.2.0",
