@@ -15,7 +15,7 @@ const GroupEats = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Sample restaurant data (fallback when APIs aren't available)
+  // Sample restaurant data
   const sampleRestaurants = [
     {
       id: 1,
@@ -131,8 +131,8 @@ const GroupEats = () => {
             lng: position.coords.longitude
           });
         },
-        (error) => {
-          console.error('Error getting location:', error);
+        (err) => {
+          console.error('Error getting location:', err);
           // Use sample data as fallback
           setLocation({
             lat: 40.7128,
@@ -187,17 +187,28 @@ const GroupEats = () => {
     newVotes[restaurantId][currentUser.id] = vote;
     setGroupVotes(newVotes);
 
-    // Check if all group members have voted
+    // Simulate other group members' votes (for demo purposes)
     const restaurant = restaurants[currentRestaurantIndex];
-    const votes = newVotes[restaurantId];
-    const votedMembers = Object.keys(votes);
-    
-    if (votedMembers.length === currentGroup.members.length) {
-      const allLiked = Object.values(votes).every(vote => vote === 'like');
+    const simulateGroupVotes = () => {
+      const otherMembers = currentGroup.members.filter(member => member.id !== currentUser.id);
+      otherMembers.forEach(member => {
+        // Simulate random voting with higher chance of liking good restaurants
+        const likeChance = restaurant.rating > 4.3 ? 0.8 : 0.6;
+        const randomVote = Math.random() < likeChance ? 'like' : 'pass';
+        newVotes[restaurantId][member.id] = randomVote;
+      });
+      setGroupVotes({...newVotes});
+
+      // Check if it's a match (all members liked it)
+      const votes = newVotes[restaurantId];
+      const allLiked = Object.values(votes).every(v => v === 'like');
       if (allLiked) {
         setMatches(prev => [...prev, restaurant]);
       }
-    }
+    };
+
+    // Simulate other votes after a short delay
+    setTimeout(simulateGroupVotes, 500);
 
     // Move to next restaurant
     if (currentRestaurantIndex < restaurants.length - 1) {
@@ -353,8 +364,8 @@ const GroupEats = () => {
             <h3 className="font-medium text-blue-900 mb-2">About This Demo</h3>
             <p className="text-sm text-blue-700">
               This is a demo version using sample restaurant data. 
-              In a full version, this would connect to real restaurant APIs 
-              like Yelp or Google Places to show actual nearby restaurants.
+              Once this is deployed and working, we can add Google Maps integration
+              to show real nearby restaurants.
             </p>
           </div>
         </div>
