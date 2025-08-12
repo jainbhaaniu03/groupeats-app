@@ -3,6 +3,7 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [ main ]
+  workflow_dispatch: # Allows manual trigger
 
 permissions:
   contents: read
@@ -27,18 +28,19 @@ jobs:
           cache: 'npm'
           
       - name: Install dependencies
-        run: npm install
+        run: npm ci
         
       - name: Build
         run: npm run build
-        
+        env:
+          CI: false  # Treats warnings as warnings, not errors
+          
       - name: Setup Pages
         uses: actions/configure-pages@v4
         
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: github-pages  # This line was added.
           path: './build'
 
   deploy:
@@ -50,4 +52,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v3
+        uses: actions/deploy-pages@v4
